@@ -83,4 +83,10 @@ public class ApiDiscountIntegrationTest {
                 .content(mapper.writeValueAsString(discountDTO)))
                 .andExpect(status().isBadRequest());
     }
+    @Test
+    @WithUserDetails(value = SUPER_USER_NAME)
+    public void shouldDeleteDiscount() throws Exception {
+        mvc.perform(delete("/api/v1/root/discount/1"))
+                .andExpect(status().isNotFound());
+    }
 }
