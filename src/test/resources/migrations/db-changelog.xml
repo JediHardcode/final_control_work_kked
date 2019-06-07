@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="USER_TABLE_1" author="derynem@gmail.com">
+        <createTable tableName="T_USER">
+            <column autoIncrement="true" name="id" type="BIGINT UNSIGNED">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="F_USERNAME" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="F_PASSWORD" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="F_ROLE" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="F_DELETED" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="DISCOUNT_TABLE" author="derynem@gmail.com">
+        <createTable tableName="T_DISCOUNT">
+            <column autoIncrement="true" name="id" type="BIGINT UNSIGNED">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="F_NAME" type="VARCHAR(50)">
+            </column>
+            <column name="F_PERCENT" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="F_DATE" type="VARCHAR(120)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="F_USER_ID" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="FK USER DISCOUNT" author="derynem@gmail.com">
+        <addForeignKeyConstraint baseColumnNames="F_USER_ID"
+                                 baseTableName="T_DISCOUNT"
+                                 constraintName="FK_F_DISCOUNT_F_USER"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="NO ACTION"
+                                 onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_USER"/>
+    </changeSet>
+    <!--    pass -root-->
+    <changeSet author="derynem@gmail.com" id="insert admin user">
+        <insert tableName="T_USER">
+            <column name="F_USERNAME" type="varchar(128)" value="ROOT"/>
+            <column name="F_PASSWORD" type="varchar(128)"
+                    value="$2a$12$Y7Mc0UocJjqO63qdNBfkn.nh9R3ope/l6e7RUmkAZqpud0lrcdWlS"/>
+            <column name="F_ROLE" type="BIGINT" value="SUPER_USER"/>
+        </insert>
+    </changeSet>
+    <!--pass customer-->
+    <changeSet author="derynem@gmail.com" id="insert customer user">
+        <insert tableName="T_USER">
+            <column name="F_USERNAME" type="varchar(128)" value="CUSTOMER"/>
+            <column name="F_PASSWORD" type="varchar(128)"
+                    value="$2a$10$UkNTNShBeJbKshzwTwPIferaGnv3hoD30pRnzdiRLdeEc3z73coHS"/>
+            <column name="F_ROLE" type="BIGINT" value="CUSTOMER_USER"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="add discount for user" author="derynem@gmail.com">
+        <insert tableName="T_DISCOUNT">
+            <column name="F_NAME" type="VARCHAR(50)" value="test">
+            </column>
+            <column name="F_PERCENT" type="VARCHAR(60)" value="10">
+                <constraints nullable="false"/>
+            </column>
+            <column name="F_DATE" type="VARCHAR(120)" value="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="F_USER_ID" type="BIGINT" value='2'/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
